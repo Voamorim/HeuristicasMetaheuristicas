@@ -2,7 +2,7 @@
 using namespace std;
 
 void printSolution(const vector<bool> &solution);
-void allPossibilities(vector<bool> solution, int idx);
+int allPossibilities(vector<bool> solution, int idx);
 
 int main(){
     int n;
@@ -14,7 +14,9 @@ int main(){
     cout << endl;
     cout << "Todas as strings binarias de tamanho " << n << ": " << endl;
 
-    allPossibilities(bin_string, 0);
+    int ans = allPossibilities(bin_string, 0);
+
+    cout << "Total de possibilidades: " << ans << endl; 
 
     return 0;
 }
@@ -28,15 +30,15 @@ void printSolution(const vector<bool> &solution){
     cout << endl;
 }
 
-void allPossibilities(vector<bool> solution, int idx=0){
+int allPossibilities(vector<bool> solution, int idx=0){
     if(idx == solution.size()){
         printSolution(solution);
-        return;
+        return 1;
     }
 
-    allPossibilities(solution, idx+1);
+    int ans = 0;
+    ans += allPossibilities(solution, idx+1);
     solution[idx] = true;
-    allPossibilities(solution, idx+1);
-
-    return;
+    ans += allPossibilities(solution, idx+1);
+    return ans;
 }

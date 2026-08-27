@@ -1,29 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void printSolution(vector<int> solution){
-    cout << '\t';
-    for(auto v : solution){
-        cout << v << ' ';
-    }
-    cout << endl;
-}
-
-void allPermutations(vector<int> solution, int idx=0){
-    if(idx == solution.size()){
-        printSolution(solution);
-        return;
-    }
-
-    allPermutations(solution, idx + 1);
-
-    for(int i = idx+1; i < solution.size(); ++i){
-        swap(solution[idx], solution[i]);
-        allPermutations(solution, idx + 1);
-        swap(solution[idx], solution[i]);
-    }
-    return;
-}
+void printSolution(vector<int> solution);
+int allPermutations(vector<int> solution, int idx=0);
 
 int main(){
     int n;
@@ -34,6 +13,38 @@ int main(){
     vector<int> solution (n);
     iota(solution.begin(), solution.end(), 1);
 
-    allPermutations(solution);
+    cout << "Todas as permutacoes possiveis: " << endl;
+
+    int ans = allPermutations(solution);
+
+    cout << "Total de permutacoes: " << ans << endl;
+
     return 0;
+}
+
+void printSolution(vector<int> solution){
+    cout << '\t';
+    for(auto v : solution){
+        cout << v << ' ';
+    }
+    cout << endl;
+}
+
+int allPermutations(vector<int> solution, int idx){
+    if(idx == solution.size()){
+        printSolution(solution);
+        return 1;
+    }
+
+    int ans = 0;
+
+    ans += allPermutations(solution, idx + 1);
+
+
+    for(int i = idx+1; i < solution.size(); ++i){
+        swap(solution[idx], solution[i]);
+        ans += allPermutations(solution, idx + 1);
+        swap(solution[idx], solution[i]);
+    }
+    return ans;
 }
