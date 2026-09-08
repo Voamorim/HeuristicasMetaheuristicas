@@ -45,8 +45,14 @@ int main() {
 	iota(access_order.begin(), access_order.end(), 0);
 
 	// Loop principal
-	while (num_iterations-- &&
-		   iterations_without_improvement < max_iterations_without_improvement) {
+	while (num_iterations--){
+        
+        // Aplica o critério de parada por estagnação
+        if(iterations_without_improvement >= max_iterations_without_improvement) {
+            cout << "Criterio de parada por estagnacao acionado!" << endl << endl;
+            break;
+        }
+
 		bool improvement = false;
 
 		// Ordem de acesso aleatoria a cada iteracao
@@ -69,7 +75,9 @@ int main() {
 			curr_fo = new_fo;
 
 			if (curr_fo < best_fo) {
-				cout << "improvement!!! new best: " << curr_fo << endl;
+                cout << "Solucao melhor encontrada: " << best_fo << endl;
+                timer.elapsed();
+                cout << endl;
 
 				best_fo = curr_fo;
 				copy(curr_solution.begin(), curr_solution.end(), best_solution.begin());

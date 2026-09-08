@@ -6,14 +6,14 @@
 
 using namespace std;
 
-void printSolution(vector<int> solution);
+void printSolution(const vector<int>& solution);
 int allPermutations(Graph* graph, vector<int> solution, int idx = 0);
 
-Graph* readGraph();
+Graph* readGraphAdjMatrix();
+Graph* readGraphPoints();
 
 int main() {
-	Graph* graph = readGraph();
-
+	Graph* graph = readGraphAdjMatrix();
 	const int n = graph->getNumVertices() - 1;
 
 	string label =
@@ -32,7 +32,26 @@ int main() {
 	return 0;
 }
 
-Graph* readGraph() {
+Graph* readGraphAdjMatrix() {
+    int n, m; cin >> n >> m; 
+    Graph* graph = new Graph(n+1);
+    
+    for(int i = 0; i < m; ++i){
+        int a, b, c; cin >> a >> b >> c;
+
+        graph->setEdge(a, b, c);
+        graph->setEdge(b, a, c);
+    } 
+
+    // Existe aresta do vertice para ele mesmo
+    for(int i = 0; i < graph->getNumVertices(); ++i){
+        graph->setEdge(i, i, 0);
+    }
+
+    return graph;
+}
+
+Graph* readGraphPoints() {
 	int n;
 	cin >> n;
 
@@ -62,7 +81,7 @@ Graph* readGraph() {
 	return graph;
 }
 
-void printSolution(vector<int> solution) {
+void printSolution(const vector<int>& solution){
 	cout << '\t';
 	for (auto v : solution) {
 		cout << v << ' ';
@@ -72,37 +91,35 @@ void printSolution(vector<int> solution) {
 
 int allPermutations(Graph* graph, vector<int> solution, int idx) {
 	if (idx == solution.size()) {
+
+        // Verifica se existe aresta do ultimo vertice para o vertice inicial
+        if(graph->getEdge(solution[idx-1], solution[0]) == -1) 
+            return 0;
+            
 		printSolution(solution);
 		return 1;
 	}
-
+    
 	const int n = graph->getNumVertices() - 1;
 	int ans = 0;
 
-	int prev_idx = idx - 1, next_idx = idx + 1;
-	prev_idx = prev_idx >= 0 ? prev_idx : n - 1;
-	next_idx = next_idx < n ? next_idx : 0;
+	int prev_idx = idx - 1;
 
 	// Não troca nada
-	if (graph->getEdge(solution[prev_idx], solution[idx]) != -1 and
-		graph->getEdge(solution[idx], solution[next_idx]) != -1) {
+	if (prev_idx == -1 or graph->getEdge(solution[prev_idx], solution[idx]) != -1) {
 		ans += allPermutations(graph, solution, idx + 1);
-	}
+	} 
 
 	for (int i = idx + 1; i < solution.size(); ++i) {
-		int prev_i = i - 1, next_i = i + 1;
+		int prev_i = i - 1;
 		prev_i = prev_i >= 0 ? prev_i : n - 1;
-		next_i = next_i < n ? next_i : 0;
 
 		// Verifica se trocar os vertices de posicao geraria uma solucao invalida
-		if (graph->getEdge(solution[prev_idx], solution[i]) == -1 or
-			graph->getEdge(solution[i], solution[next_idx]) == -1 or
-			graph->getEdge(solution[prev_i], solution[idx]) == -1 or
-			graph->getEdge(solution[idx], solution[next_i]) == -1) {
+		if (prev_idx != -1 and graph->getEdge(solution[prev_idx], solution[i]) == -1) {
 			continue;
 		}
 
-		swap(solution[idx], solution[i]);
+        swap(solution[idx], solution[i]);
 		ans += allPermutations(graph, solution, idx + 1);
 		swap(solution[idx], solution[i]);
 	}

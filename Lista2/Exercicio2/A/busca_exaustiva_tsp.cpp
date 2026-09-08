@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void printSolution(vector<int> solution);
+void printSolution(const vector<int> &solution);
 int allPermutations(vector<int> solution, int idx = 0);
 
 int main() {
@@ -27,7 +27,7 @@ int main() {
 	return 0;
 }
 
-void printSolution(vector<int> solution) {
+void printSolution(const vector<int> &solution) {
 	cout << '\t';
 	for (auto v : solution) {
 		cout << v << ' ';
