@@ -15,13 +15,7 @@ struct Backpack {
 
 Backpack* readInput(void);
 int objectiveFunction(const vector<bool> solution, Backpack* backpack);
-
-bool compItemsCostBenefit(const Item& item1, const Item& item2) {
-	double costbenefit_item1 = (double)item1.value / item1.weight;
-	double costbenefit_item2 = (double)item2.value / item2.weight;
-
-	return costbenefit_item1 > costbenefit_item2;
-}
+bool compItemsCostBenefit(const pair<Item, int>& item1, const pair<Item, int>& item2);
 
 int main() {
 	string problema = "Solucao Gulosa por Custo Beneficio para o Problema da Mochila 0/1";
@@ -30,7 +24,13 @@ int main() {
 	Backpack* backpack = readInput();
 	int n = backpack->items.size();
 
-	sort(backpack->items.begin(), backpack->items.end(), compItemsCostBenefit);
+    vector<pair<Item, int>> items(backpack->items.size());
+    for(int i = 0; i < backpack->items.size(); ++i){
+        items[i].first = backpack->items[i];
+        items[i].second = i; 
+    }
+
+	sort(items.begin(), items.end(), compItemsCostBenefit);
 
 	int curr_capacity = backpack->capacity;
 	int solution = 0;
@@ -38,13 +38,13 @@ int main() {
 	vector<int> selected_items;
 
 	// Pega os itens de maior custo benefício que ainda cabem na mochila
-	for (int i = 0; i < backpack->items.size(); ++i) {
-		auto& item = backpack->items[i];
+	for (int i = 0; i < items.size(); ++i) {
+		auto& item = items[i].first;
 
 		if (item.weight <= curr_capacity) {
 			curr_capacity -= item.weight;
 			solution += item.value;
-			selected_items.push_back(i);
+			selected_items.push_back(items[i].second);
 		}
 	}
 
@@ -96,7 +96,16 @@ int objectiveFunction(vector<bool> solution, Backpack* backpack) {
 		}
 	}
 
-	if (total_weight <= backpack->capacity) return total_value;
+	if (total_weight <= backpack->capacity) 
+        return total_value;
 
-	return -100 * total_value;	// Penaliza solucoes invalidas
+	return -100 * (total_weight - backpack->capacity);	// Penaliza solucoes invalidas
 }
+
+bool compItemsCostBenefit(const pair<Item, int>& item1, const pair<Item, int>& item2){
+	double costbenefit_item1 = (double)item1.first.value / item1.first.weight;
+	double costbenefit_item2 = (double)item2.first.value / item2.first.weight;
+
+	return costbenefit_item1 > costbenefit_item2;
+}
+

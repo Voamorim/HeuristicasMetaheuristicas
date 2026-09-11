@@ -26,11 +26,11 @@ int main() {
 	random_device rd;
 	mt19937 gen(rd());
 
-	string problema = "Solucao Gulosa por Custo Beneficio para o Problema da Mochila 0/1";
+	string problema = "Solucao Gulosa por Custo Beneficio + Heuristica para o Problema da Mochila 0/1";
 	Timer timer(problema);
 
 	// Criterio de Parada 1: Numero de interacoes
-	int max_iterations = 100;
+	int max_iterations = 1000;
 
 	// Criterio de Parada 2: Numero de iteracoes sem melhoria
 	int max_iterations_without_improvement = sqrt(max_iterations);
@@ -199,7 +199,7 @@ int objectiveFunction(vector<bool> solution, Backpack* backpack) {
 
 	if (total_weight <= backpack->capacity) return total_value;
 
-	return -100 * total_value;	// Penaliza solucoes invalidas
+	return -100 * (total_weight - backpack->capacity);	// Penaliza solucoes invalidas
 }
 
 bool compItemsCostBenefit(const pair<Item, int>& item1, const pair<Item, int>& item2) {

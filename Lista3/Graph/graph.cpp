@@ -11,8 +11,8 @@ Graph::Graph(const int num_vertices) :
                         n(num_vertices) {}
 
 
-void Graph::initGraph(const int n){
-    this->n = n;
+void Graph::initGraph(const int _n){
+    n = _n;
     G.assign(n, vector<int>(n, -1));
 }
 

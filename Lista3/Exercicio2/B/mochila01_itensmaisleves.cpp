@@ -15,10 +15,7 @@ struct Backpack {
 
 Backpack* readInput(void);
 int objectiveFunction(const vector<bool> solution, Backpack* backpack);
-
-bool compItemsLeastHeavy(const Item& item1, const Item& item2) {
-	return item1.weight < item2.weight;
-}
+bool compItemsLeastHeavy(const pair<Item, int>& item1, const pair<Item, int>& item2);
 
 int main() {
 	string problema = "Solucao Gulosa por Itens Mais Leves para o Problema da Mochila 0/1";
@@ -27,7 +24,13 @@ int main() {
 	Backpack* backpack = readInput();
 	int n = backpack->items.size();
 
-	sort(backpack->items.begin(), backpack->items.end(), compItemsLeastHeavy);
+    vector<pair<Item, int>> items (backpack->items.size());
+    for(int i = 0; i < backpack->items.size(); ++i){
+        items[i].first = backpack->items[i];
+        items[i].second = i;
+    }
+
+	sort(items.begin(), items.end(), compItemsLeastHeavy);
 
 	int curr_capacity = backpack->capacity;
 	int solution = 0;
@@ -35,13 +38,13 @@ int main() {
 	vector<int> selected_items;
 
 	// Pega os itens mais leves primeiro enquanto ainda tem espaço na mochila
-	for (int i = 0; i < backpack->items.size(); ++i) {
-		auto& item = backpack->items[i];
+	for (int i = 0; i < items.size(); ++i) {
+		auto& item = items[i].first;
 
 		if (item.weight <= curr_capacity) {
 			curr_capacity -= item.weight;
 			solution += item.value;
-			selected_items.push_back(i);
+			selected_items.push_back(items[i].second);
 		}
 	}
 
@@ -93,7 +96,12 @@ int objectiveFunction(vector<bool> solution, Backpack* backpack) {
 		}
 	}
 
-	if (total_weight <= backpack->capacity) return total_value;
+	if (total_weight <= backpack->capacity) 
+        return total_value;
 
-	return -100 * total_value;	// Penaliza solucoes invalidas
+	return -100 * (total_weight - backpack->capacity);	// Penaliza solucoes invalidas
+}
+
+bool compItemsLeastHeavy(const pair<Item, int>& item1, const pair<Item, int>& item2){
+	return item1.first.weight < item2.first.weight;
 }

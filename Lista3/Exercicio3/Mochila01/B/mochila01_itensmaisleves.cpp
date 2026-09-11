@@ -16,8 +16,8 @@ struct Backpack {
 Backpack* readInput(void);
 int objectiveFunction(const vector<bool> solution, Backpack* backpack);
 
-pair<int, vector<bool>> costBenefitSolution(Backpack* backpack);
-bool compItemsLeastHeavy(const Item& item1, const Item& item2);
+pair<int, vector<bool>> leastHeavySolution(Backpack* backpack);
+bool compItemsLeastHeavy(const pair<Item, int>& item1, const pair<Item, int>& item2);
 
 int getRandomInteger(int l, int r, mt19937& gen);
 float getRandomFloat(mt19937& gen);
@@ -31,7 +31,7 @@ int main() {
 	Timer timer(problema);
 
 	// Criterio de Parada 1: Numero de interacoes
-	int max_iterations = 100;
+	int max_iterations = 1000;
 
 	// Criterio de Parada 2: Numero de iteracoes sem melhoria
 	int max_iterations_without_improvement = sqrt(max_iterations);
@@ -39,11 +39,11 @@ int main() {
 	Backpack* backpack = readInput();
 	int n = backpack->items.size();
 
-	auto [curr_fo, curr_solution] = costBenefitSolution(backpack);
+	auto [curr_fo, curr_solution] = leastHeavySolution(backpack);
 	int best_fo = curr_fo;
 
 	cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
-	cout << "               Heuristica por Custo Beneficio" << endl;
+	cout << "               Heuristica por Itens Mais Leves" << endl;
 	cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << endl;
 	cout << "- Funcao objetivo encontrada: " << curr_fo << endl;
 	cout << "- Itens selecionados: ";
@@ -140,15 +140,15 @@ int main() {
 	return 0;
 }
 
-pair<int, vector<bool>> costBenefitSolution(Backpack* backpack) {
-	vector<pair<Item, int>> sorted_items_costbenefit(backpack->items.size());
+pair<int, vector<bool>> leastHeavySolution(Backpack* backpack) {
+	vector<pair<Item, int>> sorted_items_leastheavy(backpack->items.size());
 	for (int i = 0; i < backpack->items.size(); ++i) {
-		auto& item = sorted_items_costbenefit[i];
+		auto& item = sorted_items_leastheavy[i];
 		item.first = backpack->items[i];
 		item.second = i;
 	}
 
-	sort(sorted_items_costbenefit.begin(), sorted_items_costbenefit.end(), compItemsCostBenefit);
+	sort(sorted_items_leastheavy.begin(), sorted_items_leastheavy.end(), compItemsLeastHeavy);
 
 	int curr_capacity = backpack->capacity;
 	int solution = 0;
@@ -157,7 +157,7 @@ pair<int, vector<bool>> costBenefitSolution(Backpack* backpack) {
 
 	// Pega os itens de maior custo benefício que ainda cabem na mochila
 	for (int i = 0; i < backpack->items.size(); ++i) {
-		auto& item = sorted_items_costbenefit[i];
+		auto& item = sorted_items_leastheavy[i];
 
 		if (item.first.weight <= curr_capacity) {
 			curr_capacity -= item.first.weight;
@@ -200,7 +200,7 @@ int objectiveFunction(vector<bool> solution, Backpack* backpack) {
 
 	if (total_weight <= backpack->capacity) return total_value;
 
-	return -100 * total_value;	// Penaliza solucoes invalidas
+	return -100 * (total_weight - backpack->capacity);	// Penaliza solucoes invalidas
 }
 
 bool compItemsCostBenefit(const pair<Item, int>& item1, const pair<Item, int>& item2) {
@@ -220,6 +220,6 @@ int getRandomInteger(int l, int r, mt19937& gen) {
 	return dis(gen);
 }
 
-bool compItemsLeastHeavy(const Item& item1, const Item& item2) {
-	return item1.weight < item2.weight;
+bool compItemsLeastHeavy(const pair<Item, int>& item1, const pair<Item, int>& item2) {
+	return item1.first.weight < item2.first.weight;
 }
