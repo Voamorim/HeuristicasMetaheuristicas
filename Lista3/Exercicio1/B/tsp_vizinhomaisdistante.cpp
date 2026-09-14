@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-#include "../../Graph/graph.hpp"
-#include "../../Timer/timer.hpp"
+#include "graph.hpp"
+#include "timer.hpp"
 
 using namespace std;
 

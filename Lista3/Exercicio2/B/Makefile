@@ -1,42 +1,47 @@
-COMPILER = g++
-FLAGS = -g -O3
-BINARYDIR = Binary
-EXENAME = mochila01_itensmaisleves
-MAIN_FILE = mochila01_itensmaisleves
+COMPILER 	= g++
+
+FLAGS 		= -O3 -Wshadow -flto
+LDFLAGS 	= -O3 -flto -lm
+
+BINARYDIR 	= Binary
+EXENAME 	= mochila01_itensmaisleves
+MAIN_FILE 	= mochila01_itensmaisleves
 
 TIMER_PATH 	= ../../Timer
 
-SRCS 		=	$(filter-out $(MAIN_FILE).cpp, $(wildcard *.cpp))
-SRCS_TIMER 	= 	$(filter-out $(TIMER_PATH)/main.cpp, $(wildcard $(TIMER_PATH)/*.cpp))
+SRCS 		= $(filter-out $(MAIN_FILE).cpp, $(wildcard *.cpp))
+SRCS_TIMER 	= $(filter-out $(TIMER_PATH)/main.cpp, $(wildcard $(TIMER_PATH)/*.cpp))
 
-OBJS_LOCAL 	= 	$(SRCS:%.cpp=$(BINARYDIR)/%.o)
-OBJS_TIMER 	= 	$(SRCS_TIMER:$(TIMER_PATH)/%.cpp=$(BINARYDIR)/timer_%.o)
-OBJS 		= 	$(OBJS_LOCAL) $(OBJS_TIMER)
+OBJS_LOCAL 	= $(SRCS:%.cpp=$(BINARYDIR)/%.o)
+OBJS_TIMER 	= $(SRCS_TIMER:$(TIMER_PATH)/%.cpp=$(BINARYDIR)/timer_%.o)
+OBJS_MAIN 	= $(BINARYDIR)/$(MAIN_FILE).o	
+
+OBJS 		= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_MAIN)
 
 INCLUDES 	= -I. -I$(TIMER_PATH)
 
 .PHONY: all clean run
 
-all: $(BINARYDIR) $(EXENAME)
+all: $(EXENAME)
 
-$(EXENAME): $(OBJS) $(BINARYDIR)/$(MAIN_FILE).o
-	$(COMPILER) $(INCLUDES) $(FLAGS) $^ -o $@ -lm
+$(EXENAME): $(OBJS) 
+	$(COMPILER) $(OBJS) -o $@ $(LDFLAGS) 
 
 # Local cpp files
-$(BINARYDIR)/%.o: %.cpp
-	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@ -lm
+$(BINARYDIR)/%.o: %.cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 # Timer cpp files
-$(BINARYDIR)/timer_%.o: $(TIMER_PATH)/%.cpp
-	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@ -lm
+$(BINARYDIR)/timer_%.o: $(TIMER_PATH)/%.cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
-$(BINARYDIR)/$(MAIN_FILE).o: $(MAIN_FILE).cpp
-	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@ -lm
+$(BINARYDIR)/$(MAIN_FILE).o: $(MAIN_FILE).cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 $(BINARYDIR):
 	mkdir -p $(BINARYDIR)
 
-run:
+run: $(EXENAME)
 	./$(EXENAME)
 
 clean:

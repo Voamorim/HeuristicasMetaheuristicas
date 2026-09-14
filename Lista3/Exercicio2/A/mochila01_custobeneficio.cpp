@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-#include "../../Timer/timer.hpp"
+#include "timer.hpp"
 
 using namespace std;
 
