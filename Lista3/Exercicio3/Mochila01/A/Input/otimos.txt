@@ -1,4 +1,0 @@
-Otimos das entradas:
-mochila_4_20 - 35
-mochila_100_1000 - 9147
-tsp51 - 426

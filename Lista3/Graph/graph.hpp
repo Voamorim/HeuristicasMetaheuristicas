@@ -8,7 +8,7 @@ using namespace std;
 
 class Graph {
    private:
-    vector<vector<double>> G;
+    vector<vector<int>> G;
     int n;
 
    public:
@@ -17,9 +17,9 @@ class Graph {
 
     void readGraph(ifstream& input_file);
 
-    double getEdge(const int src, const int dest) const;
-    void setEdge(const int src, const int dest, const double cost);
-    void incrementEdge(const int src, const int dest, const double increment);
+    int getEdge(const int src, const int dest) const;
+    void setEdge(const int src, const int dest, const int cost);
+    void incrementEdge(const int src, const int dest, const int increment);
 
     int getNumVertices() const;
 

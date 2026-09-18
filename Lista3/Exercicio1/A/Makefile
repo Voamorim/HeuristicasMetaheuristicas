@@ -1,7 +1,7 @@
 COMPILER 	= g++
 
-FLAGS 		= -O3 -Wshadow -flto
-LDFLAGS		= -O3 -flto -lm
+FLAGS 		= -std=c++17 -O3 -Wshadow -flto
+LDFLAGS		= -std=c++17 -O3 -flto -lm
 
 BINARYDIR 	= Binary
 EXENAME 	= tsp_vizinhomaisproximo 
