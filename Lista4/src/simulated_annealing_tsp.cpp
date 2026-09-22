@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "graph.hpp"
 #include "timer.hpp"
@@ -78,7 +79,7 @@ int main() {
     vector<int> curr_solution = getRandomSolutionTSP(n, gen);
 
     // Temperatura inicial
-    float temperature = 1000000.0f;
+    float temperature = 10000000.0f;
 
     // Fator de esfriamento
     float alpha = 0.95f;

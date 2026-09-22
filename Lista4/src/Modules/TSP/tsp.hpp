@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <random>
+#include <algorithm>
 #include <vector>
 
 #include "graph.hpp"
