@@ -4,8 +4,8 @@ FLAGS			= -std=c++17 -O3 -Wshadow -flto
 LDFLAGS			= -std=c++17 -O3 -flto -lm
 
 BINARYDIR 		= Binary
-EXENAME 		= busca_tabu_mochila 
-MAIN_FILE 		= busca_tabu_mochila 
+EXENAME 		= busca_tabu_mochila
+MAIN_FILE 		= busca_tabu_mochila
 TARGET 			= $(BINARYDIR)/$(EXENAME)
 
 MODULES_PATH	= ./Modules
@@ -19,12 +19,12 @@ SRCS_BACKPACK	= $(filter-out $(BACKPACK_PATH)/main.cpp, $(wildcard $(BACKPACK_PA
 
 OBJS_LOCAL 		= $(SRCS:%.cpp=$(BINARYDIR)/%.o)
 OBJS_TIMER 		= $(SRCS_TIMER:$(TIMER_PATH)/%.cpp=$(BINARYDIR)/timer_%.o)
-OBJS_BACKPACK 	= $(SRCS_BACKPACK:$(BACKPACK_PATH)/%.cpp=$(BINARYDIR)/tsp_%.o)
+OBJS_BACKPACK 	= $(SRCS_BACKPACK:$(BACKPACK_PATH)/%.cpp=$(BINARYDIR)/backpack_%.o)
 OBJS_MAIN 		= $(BINARYDIR)/$(MAIN_FILE).o
 
 OBJS 			= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_BACKPACK) $(OBJS_MAIN)
 
-INCLUDES 		= -I. -I$(TIMER_PATH) -I$(GRAPH_PATH) -I$(BACKPACK_PATH)
+INCLUDES 		= -I. -I$(TIMER_PATH) -I$(BACKPACK_PATH)
 
 .PHONY: all clean run
 
@@ -42,7 +42,7 @@ $(BINARYDIR)/timer_%.o: $(TIMER_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 # Backpack cpp files
-$(BINARYDIR)/tsp_%.o: $(BACKPACK_PATH)/%.cpp | $(BINARYDIR)
+$(BINARYDIR)/backpack_%.o: $(BACKPACK_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 $(BINARYDIR)/$(MAIN_FILE).o: $(MAIN_FILE).cpp | $(BINARYDIR)

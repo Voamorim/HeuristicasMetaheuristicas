@@ -4,6 +4,10 @@
 #include <climits>
 #include <vector>
 #include <algorithm>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
 
 struct Item {
     int value, weight;

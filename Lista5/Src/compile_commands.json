@@ -1,0 +1,59 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-I./Modules/Timer",
+      "-I./Modules/Backpack",
+      "-std=c++17",
+      "-O3",
+      "-Wshadow",
+      "-flto",
+      "-c",
+      "-o",
+      "Binary/timer_timer.o",
+      "Modules/Timer/timer.cpp"
+    ],
+    "directory": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src",
+    "file": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/Modules/Timer/timer.cpp",
+    "output": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/Binary/timer_timer.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-I./Modules/Timer",
+      "-I./Modules/Backpack",
+      "-std=c++17",
+      "-O3",
+      "-Wshadow",
+      "-flto",
+      "-c",
+      "-o",
+      "Binary/backpack_backpack.o",
+      "Modules/Backpack/backpack.cpp"
+    ],
+    "directory": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src",
+    "file": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/Modules/Backpack/backpack.cpp",
+    "output": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/Binary/backpack_backpack.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-I./Modules/Timer",
+      "-I./Modules/Backpack",
+      "-std=c++17",
+      "-O3",
+      "-Wshadow",
+      "-flto",
+      "-c",
+      "-o",
+      "Binary/busca_tabu_mochila.o",
+      "busca_tabu_mochila.cpp"
+    ],
+    "directory": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src",
+    "file": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/busca_tabu_mochila.cpp",
+    "output": "/home/voamorim/Documents/UFSJ/7o_periodo/HeuristicasMetaheuristicas/Lista5/Src/Binary/busca_tabu_mochila.o"
+  }
+]

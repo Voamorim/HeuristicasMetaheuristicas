@@ -1,121 +1,136 @@
-#include <vector>
-#include <iostream>
+#include <algorithm>
 #include <climits>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 #include "backpack.hpp"
 #include "timer.hpp"
 
 using namespace std;
 
-pair<long long, vector<bool>> tabuSearchBackpack(Backpack* backpack);
+pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long long fo,
+                                                 Backpack* backpack, Timer& timer);
 void printSolution(const vector<bool>& solution, const long long fo);
 
-int main(){
+int main() {
     string label = "Busca Tabu para o o Problema da Mochila 0/1";
     Timer timer(label);
 
     // Le o problema da entrada
     Backpack* backpack = readInputBackpack();
 
+    // Solucao inicial gulosa
+    auto [fo, solution] = greedySolutionBackpack(backpack);
+
     // Busca Tabu
-    auto [fo, solution] = tabuSearchBackpack(backpack);
-   
+    auto [best_fo, best_solution] = tabuSearchBackpack(solution, fo, backpack, timer);
+
     // Imprime solucao encontrada e tempo gasto
     timer.stop();
     cout << endl;
-    printSolution(solution, fo);
+    printSolution(best_solution, best_fo);
 
     delete backpack;
     return 0;
 }
 
-pair<long long, vector<bool>> tabuSearchBackpack(Backpack* backpack){
+pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long long fo,
+                                                 Backpack* backpack, Timer& timer) {
     const int n = backpack->items.size();
 
-    // Solucao inicial gulosa
-    auto [fo, solution] = greedySolutionBackpack(backpack);  
-
-    vector<bool> best_solution (n);
+    vector<bool> best_solution(n);
     copy(solution.begin(), solution.end(), best_solution.begin());
     long long best_fo = fo;
 
     // Define criterios de parada
-    const int max_iterations = 1000;
+    const int max_iterations = 1000 * n;
     const int max_iterations_without_improvement = sqrt(max_iterations);
 
     // Define o tempo de vida de um elemento na lista tabu
     const int ttl_tabu_list = 3;
 
     // Inicializa a lista tabu com prazo
-    vector<int> tabu_list (n, 0);
-   
-    int iterations = 0;
-    int iteration_without_improvement = 0;
+    vector<int> tabu_list(n, 0);
 
-    while((iterations++ < max_iterations) && 
-          (iteration_without_improvement < max_iterations_without_improvement)){
-      
+    int iterations = 0;
+    int iterations_without_improvement = 0;
+
+    while (iterations++ < max_iterations) {
+        // Aplica criterio de parada por estagnacao
+        if (iterations_without_improvement >= max_iterations_without_improvement) {
+            cout << "Criterio de parada por estagnacao acionado!" << endl << endl;
+            break;
+        }
+
         long long best_neighbor_fo = -LLONG_MAX;
         int flip_pos = -1;
 
         // Criterio de Aspiracao por default
         // Verifica se todos os elementos estao na lista tabu
-        int min_tabu_list = min_element(tabu_list.begin(), tabu_list.end());
-        if(min_tabu_list != 0){
-            // Caso todos estejam, realizamos o flip do mais antigo 
-            for(int i = 0; i < n; ++i){
-                if(tabu_list[i] != min_tabu_list) continue;
+        int min_tabu_list = *min_element(tabu_list.begin(), tabu_list.end());
+        if (min_tabu_list != 0) {
+            // Caso todos estejam, realizamos o flip do mais antigo
+            for (int i = 0; i < n; ++i) {
+                if (tabu_list[i] != min_tabu_list) continue;
 
                 flip_pos = i;
-                solution[i] ^= 1;
+                solution[i] = solution[i] ^ 1;
                 best_neighbor_fo = objectiveFunctionBackpack(solution, backpack);
-                solution[i] ^= 1;
+                solution[i] = solution[i] ^ 1;
             }
         } else {
-            for(int i = 0; i < n; ++i){
-                solution[i] ^= 1; // flip
-                
+            for (int i = 0; i < n; ++i) {
+                solution[i] = solution[i] ^ 1;  // flip
+
                 fo = objectiveFunctionBackpack(solution, backpack);
-                if((!tabu_list[i] and fo > best_neighbor_fo) or (fo > best_fo)){
+                if ((!tabu_list[i] and fo > best_neighbor_fo) or
+                    (fo > best_fo and fo > best_neighbor_fo)) {
                     best_neighbor_fo = fo;
                     flip_pos = i;
                 }
 
-                solution[i] ^= 1; // desfaz flip
+                solution[i] = solution[i] ^ 1;  // desfaz flip
             }
         }
 
         // Decrementa a lista tabu
-        for(int i = 0; i < n; ++i){
-            if(not tabu_list[i]) continue;
+        for (int i = 0; i < n; ++i) {
+            if (not tabu_list[i]) continue;
             tabu_list[i] -= 1;
         }
 
         // Adiciona o vizinho escolhido na lista tabu
         tabu_list[flip_pos] = ttl_tabu_list;
 
-        // Atualiza a solucao atual 
-        solution[flip_pos] ^= 1;
+        // Atualiza a solucao atual
+        solution[flip_pos] = solution[flip_pos] ^ 1;
         fo = objectiveFunctionBackpack(solution, backpack);
 
         // Atualiza a melhor solucao encontrada
-        if(fo > best_fo){
+        if (fo > best_fo) {
             best_fo = fo;
             copy(solution.begin(), solution.end(), best_solution.begin());
+            iterations_without_improvement = 0;
+
+            cout << "Solucao melhor encontrada: " << best_fo << endl;
+            timer.elapsed();
+            cout << endl;
+        } else {
+            iterations_without_improvement++;
         }
     }
     return make_pair(best_fo, best_solution);
-} 
+}
 
-void printSolution(const vector<bool>& solution, const long long fo){
+void printSolution(const vector<bool>& solution, const long long fo) {
     cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" << endl;
     cout << "       Busca Tabu para o Problema da Mochila       " << endl;
     cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" << endl;
-    cout << "- FO encontrada: " << fo << endl;
-    cout << "- Itens escolhidos: ";
+    cout << "- FO: " << fo << endl;
+    cout << "- Itens: ";
     for (int i = 0; i < solution.size(); ++i) {
-        if(not solution[i]) continue;
+        if (not solution[i]) continue;
         cout << i << ' ';
     }
     cout << endl;
