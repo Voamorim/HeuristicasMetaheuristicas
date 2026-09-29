@@ -1,0 +1,22 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-I.",
+      "-I../../Modules/Timer",
+      "-I../../Modules/Utils",
+      "-I../../Modules/Backpack/Backpack",
+      "-std=c++17",
+      "-O3",
+      "-Wshadow",
+      "-flto",
+      "-c",
+      "-o",
+      "Binary/simulated_annealing_backpack.o",
+      "simulated_annealing_backpack.cpp"
+    ],
+    "directory": "/home/voamorim/Documents/UFSJ/7o_Periodo/HeuristicasMetaheuristicas/Trabalho1/SimulatedAnnealing/Backpack",
+    "file": "/home/voamorim/Documents/UFSJ/7o_Periodo/HeuristicasMetaheuristicas/Trabalho1/SimulatedAnnealing/Backpack/simulated_annealing_backpack.cpp",
+    "output": "/home/voamorim/Documents/UFSJ/7o_Periodo/HeuristicasMetaheuristicas/Trabalho1/SimulatedAnnealing/Backpack/Binary/simulated_annealing_backpack.o"
+  }
+]

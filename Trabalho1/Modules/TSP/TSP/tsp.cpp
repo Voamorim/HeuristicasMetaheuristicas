@@ -1,6 +1,6 @@
 #include "tsp.hpp"
 
-int objectiveFunctionTSP(const vector<int>& solution, Graph* graph) {
+int objectiveFunctionTSP(const vector<int>& solution, Graph* graph, const bool penalty) {
     int fo = 0;
     int v = solution[0];
 
@@ -9,7 +9,7 @@ int objectiveFunctionTSP(const vector<int>& solution, Graph* graph) {
 
         // Punicao para solucoes que usam arestas inexistentes no grafo (solucoes
         // inviaveis)
-        if (w == -1) {
+        if (w == -1 && penalty) {
             return 100000;
         }
 
@@ -20,7 +20,7 @@ int objectiveFunctionTSP(const vector<int>& solution, Graph* graph) {
 
     // Punicao para solucoes que usam arestas inexistentes no grafo (solucoes
     // inviaveis)
-    if (w == -1) {
+    if (w == -1 && penalty) {
         return 100000;
     }
 
@@ -35,14 +35,63 @@ vector<int> getRandomSolutionTSP(const int n, mt19937& gen) {
     return solution;
 }
 
-void printBestSolutionTSP(const vector<int>& best_solution, const int best_fo) {
-    cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" << endl;
-    cout << "         Problema do Caixeiro Viajante (TSP)       " << endl;
-    cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" << endl;
-    cout << "- Melhor FO encontrada: " << best_fo << endl;
-    cout << "- Caminho encontrado: ";
-    for (int i = 0; i < best_solution.size(); ++i) {
-        cout << best_solution[i] << ' ';
+vector<int> getGreedySolutionTSP(Graph *graph, const int n, mt19937& gen){
+    vector<int> solution;
+
+    int starting_node = getRandomInteger(1, n, gen);
+    solution.push_back(starting_node);
+
+    vector<bool> vis (n+1, false);
+    vis[starting_node] = true;
+
+    for(int i = 1; i < n; ++i){
+        long long min_edge = LLONG_MAX;
+        int next_node = -1;
+
+        for(int v = 1; v <= n; ++v){
+            if(vis[v]) continue;
+
+            int w = graph->getEdge(solution[i-1], v);
+
+            if(w < min_edge){
+                next_node = v;
+                min_edge = w;
+            }
+        }
+        solution.push_back(next_node);
     }
-    cout << best_solution[0] << endl;
+    solution.push_back(starting_node);
+    return solution;
+}
+
+void printSolutionTSP(const vector<int>& solution, const int fo, const string title) {
+    int title_size = title.size();
+    int bar_size = 60; 
+
+    // Barra superior
+    for(int i = 0; i < bar_size; i+=2)
+        cout << "=-";
+    cout << endl;
+
+    int n_espaces = (bar_size - title_size) / 2;
+    while(n_espaces--)
+        cout << ' ';
+    cout << title << endl;
+
+    // Barra inferior
+    for(int i = 0; i < bar_size; i+=2)
+        cout << "=-";
+    cout << endl;
+    
+    cout << "- FO: " << fo << endl;
+    cout << "- Caminho: ";
+    for (int i = 0; i < solution.size(); ++i) {
+        cout << solution[i] << ' ';
+    }
+    cout << solution[0] << endl;
+
+    // Barra inferior
+    for(int i = 0; i < bar_size; i+=2)
+        cout << "=-";
+    cout << endl;
 }
