@@ -35,54 +35,59 @@ vector<int> getRandomSolutionTSP(const int n, mt19937& gen) {
     return solution;
 }
 
-vector<int> getGreedySolutionTSP(Graph *graph, const int n, mt19937& gen){
+vector<int> getGreedySolutionTSP(Graph* graph, const int n, mt19937& gen,
+                                 const bool print_solution) {
     vector<int> solution;
 
     int starting_node = getRandomInteger(1, n, gen);
     solution.push_back(starting_node);
 
-    vector<bool> vis (n+1, false);
+    vector<bool> vis(n + 1, false);
     vis[starting_node] = true;
 
-    for(int i = 1; i < n; ++i){
+    for (int i = 1; i < n; ++i) {
         long long min_edge = LLONG_MAX;
         int next_node = -1;
 
-        for(int v = 1; v <= n; ++v){
-            if(vis[v]) continue;
+        for (int v = 1; v <= n; ++v) {
+            if (vis[v]) continue;
 
-            int w = graph->getEdge(solution[i-1], v);
+            int w = graph->getEdge(solution[i - 1], v);
 
-            if(w < min_edge){
+            if (w < min_edge) {
                 next_node = v;
                 min_edge = w;
             }
         }
+        vis[next_node] = true;
         solution.push_back(next_node);
     }
-    solution.push_back(starting_node);
+
+    if (print_solution) {
+        string title = "Heuristica Gulosa para o TSP";
+        int fo = objectiveFunctionTSP(solution, graph, false);
+        printSolutionTSP(solution, fo, title);
+    }
+
     return solution;
 }
 
 void printSolutionTSP(const vector<int>& solution, const int fo, const string title) {
     int title_size = title.size();
-    int bar_size = 60; 
+    int bar_size = 60;
 
     // Barra superior
-    for(int i = 0; i < bar_size; i+=2)
-        cout << "=-";
+    for (int i = 0; i < bar_size; i += 2) cout << "=-";
     cout << endl;
 
     int n_espaces = (bar_size - title_size) / 2;
-    while(n_espaces--)
-        cout << ' ';
+    while (n_espaces--) cout << ' ';
     cout << title << endl;
 
     // Barra inferior
-    for(int i = 0; i < bar_size; i+=2)
-        cout << "=-";
+    for (int i = 0; i < bar_size; i += 2) cout << "=-";
     cout << endl;
-    
+
     cout << "- FO: " << fo << endl;
     cout << "- Caminho: ";
     for (int i = 0; i < solution.size(); ++i) {
@@ -91,7 +96,6 @@ void printSolutionTSP(const vector<int>& solution, const int fo, const string ti
     cout << solution[0] << endl;
 
     // Barra inferior
-    for(int i = 0; i < bar_size; i+=2)
-        cout << "=-";
+    for (int i = 0; i < bar_size; i += 2) cout << "=-";
     cout << endl;
 }

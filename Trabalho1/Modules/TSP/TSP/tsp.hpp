@@ -12,8 +12,9 @@
 
 using namespace std;
 
-vector<int> getRandomSolutionTSP(const int n, mt19937& gen);
-vector<int> getGreedySolutionTSP(Graph* graph, const int n);
+vector<int> getRandomSolutionTSP(const int n, mt19937& gen, const bool print_solution);
+vector<int> getGreedySolutionTSP(Graph* graph, const int n, mt19937& gen,
+                                 const bool print_solution);
 
 int objectiveFunctionTSP(const vector<int>& solution, Graph* graph, const bool penalty);
 
