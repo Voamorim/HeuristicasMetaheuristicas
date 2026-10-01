@@ -10,20 +10,20 @@
 using namespace std;
 
 struct Item {
-	int value, weight;
+    int value, weight;
 };
 
 struct Backpack {
-	vector<Item> items;
-	int capacity;
+    vector<Item> items;
+    int capacity;
 };
 
 pair<long long, vector<bool>> greedySolutionBackpack(Backpack* backpack);
 
 Backpack* readInputBackpack(void);
 
-long long objectiveFunctionBackpack(const vector<bool> solution, Backpack* backpack,
-									const bool penalty = true);
+pair<long long, bool> objectiveFunctionBackpack(const vector<bool> solution, Backpack* backpack,
+                                                const bool penalty = true);
 
 bool compItemsCostBenefit(const pair<Item, int>& item1, const pair<Item, int>& item2);
 
