@@ -7,6 +7,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "backpack.hpp"
@@ -15,8 +16,8 @@
 
 using namespace std;
 
-pair<int, vector<bool>> simulatedAnnealingBackpack(vector<bool>& curr_solution, double temperature,
-												   const double alpha, const int sa,
-												   Backpack* backpack, mt19937& gen);
+pair<int, vector<bool>> simulatedAnnealingBackpack(vector<bool> curr_solution, double temperature,
+                                                   const double alpha, const int sa,
+                                                   Backpack* backpack, mt19937& gen);
 
 #endif
