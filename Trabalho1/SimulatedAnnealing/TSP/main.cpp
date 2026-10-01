@@ -78,30 +78,30 @@ void factorialTest(const vector<int>& curr_solution, const int curr_fo, Graph* g
 	// Iterações por temperatura
 	const int sa = graph->getNumVertices() - 1;
 
+	// Inicializa csv
 	int table_idx = 1;
 	const vector<string> csv_labels = {"Temperatura", "Alpha", "SA", "FO"};
+	string csv_path = "Tables/sa_tsp.csv";
+	CsvBuilder* csv_builder = new CsvBuilder(csv_path, csv_labels);
 
 	// Temperatura inicial
 	for (const auto& temperature : temperatures) {
 		// Fator de esfriamento
 		for (const auto& alpha : alphas) {
-			// Icializa csv
-			string csv_path = "Tables/table_" + to_string(table_idx++) + ".csv";
-			CsvBuilder* csv_builder = new CsvBuilder(csv_path, csv_labels);
-
 			// Simulated Annealing
 			auto [best_fo, best_solution] =
 				simulatedAnnealingTSP(curr_solution, temperature, alpha, sa, graph, gen);
 
 			vector<double> csv_values = {temperature, alpha, (double)sa, (double)best_fo};
 			csv_builder->addLine(csv_values);
-			delete csv_builder;
 		}
 	}
 
-	// Imprime o tempo total gasto
+	cout << "[INFO] Tabela " << csv_path << " construida com sucesso!" << endl;
 	timer.stop();
 	cout << endl;
+
+	delete csv_builder;
 	return;
 }
 
@@ -123,6 +123,6 @@ void solve(const vector<int>& curr_solution, const int curr_fo, Graph* graph, mt
 	// Imprime solução encontrada e o tempo gasto
 	timer.stop();
 	cout << endl;
-	string title = "Busca Tabu para o TSP";
+	string title = "Simulated Annealing para o TSP";
 	printSolutionTSP(best_solution, best_fo, title);
 }
