@@ -14,29 +14,34 @@ TSP_MODULES_PATH 	= $(MODULES_PATH)/TSP
 
 TIMER_PATH 			= $(MODULES_PATH)/Timer
 UTILS_PATH 			= $(MODULES_PATH)/Utils
+IO_PATH				= $(MODULES_PATH)/IO
+BUILDCSV_PATH		= $(MODULES_PATH)/BuildCSV
 GRAPH_PATH			= $(TSP_MODULES_PATH)/Graph
 TSP_PATH 			= $(TSP_MODULES_PATH)/TSP
 SA_PATH				= SimulatedAnnealing_TSP
 
 SRCS 				= $(filter-out $(MAIN_FILE).cpp ./$(MAIN_FILE).cpp, $(wildcard *.cpp))
 SRCS_TIMER			= $(wildcard $(TIMER_PATH)/*.cpp)
-SRCS_GRAPH			= $(wildcard $(GRAPH_PATH)/*.cpp)
 SRCS_UTILS			= $(wildcard $(UTILS_PATH)/*.cpp)
+SRCS_IO				= $(wildcard $(IO_PATH)/*.cpp)
+SRCS_BUILDCSV		= $(wildcard $(BUILDCSV_PATH)/*.cpp)
+SRCS_GRAPH			= $(wildcard $(GRAPH_PATH)/*.cpp)
 SRCS_TSP			= $(wildcard $(TSP_PATH)/*.cpp)
 SRCS_SA				= $(wildcard $(SA_PATH)/*.cpp)
-
 
 OBJS_MAIN 			= $(BINARYDIR)/$(MAIN_FILE).o
 OBJS_LOCAL 			= $(patsubst %.cpp, $(BINARYDIR)/%.o, $(notdir $(SRCS)))
 OBJS_TIMER 			= $(patsubst %.cpp, $(BINARYDIR)/timer_%.o, $(notdir $(SRCS_TIMER)))
-OBJS_GRAPH 			= $(patsubst %.cpp, $(BINARYDIR)/graph_%.o, $(notdir $(SRCS_GRAPH)))
 OBJS_UTILS 			= $(patsubst %.cpp, $(BINARYDIR)/utils_%.o, $(notdir $(SRCS_UTILS)))
+OBJS_IO				= $(patsubst %.cpp, $(BINARYDIR)/io_%.o, $(notdir $(SRCS_IO)))
+OBJS_BUILDCSV		= $(patsubst %.cpp, $(BINARYDIR)/buildcsv_%.o, $(notdir $(SRCS_BUILDCSV)))
+OBJS_GRAPH 			= $(patsubst %.cpp, $(BINARYDIR)/graph_%.o, $(notdir $(SRCS_GRAPH)))
 OBJS_TSP 			= $(patsubst %.cpp, $(BINARYDIR)/tsp_%.o, $(notdir $(SRCS_TSP)))
-OBJS_SA 			= $(patsubst %.cpp, $(BINARYDIR)/bt_%.o, $(notdir $(SRCS_SA)))
+OBJS_SA 			= $(patsubst %.cpp, $(BINARYDIR)/sa_%.o, $(notdir $(SRCS_SA)))
 
-OBJS 				= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_GRAPH) $(OBJS_UTILS) $(OBJS_TSP) $(OBJS_SA) $(OBJS_MAIN)
+OBJS 				= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_UTILS) $(OBJS_IO) $(OBJS_BUILDCSV) $(OBJS_GRAPH) $(OBJS_TSP) $(OBJS_SA) $(OBJS_MAIN)
 
-INCLUDES 			= -I. -I$(TIMER_PATH) -I$(GRAPH_PATH) -I$(UTILS_PATH) -I$(TSP_PATH) -I$(SA_PATH)
+INCLUDES 			= -I. -I$(TIMER_PATH) -I$(UTILS_PATH) -I$(IO_PATH) -I$(BUILDCSV_PATH) -I$(GRAPH_PATH) -I$(TSP_PATH) -I$(SA_PATH)
 
 .PHONY: all clean run
 
@@ -58,12 +63,20 @@ $(BINARYDIR)/%.o: %.cpp | $(BINARYDIR)
 $(BINARYDIR)/timer_%.o: $(TIMER_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
-# Graph files
-$(BINARYDIR)/graph_%.o: $(GRAPH_PATH)/%.cpp | $(BINARYDIR)
-	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
-
 # Utils files
 $(BINARYDIR)/utils_%.o: $(UTILS_PATH)/%.cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
+
+# Io files
+$(BINARYDIR)/io_%.o: $(IO_PATH)/%.cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
+
+# BuildCSV files
+$(BINARYDIR)/buildcsv_%.o: $(BUILDCSV_PATH)/%.cpp | $(BINARYDIR)
+	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
+
+# Graph files
+$(BINARYDIR)/graph_%.o: $(GRAPH_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 # TSP files
@@ -78,7 +91,7 @@ $(BINARYDIR):
 	mkdir -p $(BINARYDIR)
 
 run: $(TARGET)
-	./$(TARGET)
+	./$(TARGET) $(ARGS)
 
 clean:
 	rm -rf $(BINARYDIR)
