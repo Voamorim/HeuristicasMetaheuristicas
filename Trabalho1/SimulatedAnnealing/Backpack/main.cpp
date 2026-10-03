@@ -9,9 +9,10 @@
 #include "io.hpp"
 #include "sa_backpack.hpp"
 #include "timer.hpp"
-#include "utils.hpp"
 
 using namespace std;
+
+#define DEFAULT_INPUT_FILE "knapPI_1_2000_1000_1"
 
 void factorialTest(const vector<bool>& curr_solution, const int curr_fo, Backpack* backpack,
                    mt19937& gen, Timer& timer);
@@ -29,8 +30,9 @@ int main(int argc, char** argv) {
     Io* io = new Io();
     string input_file_name = io->getInputFileName(argc, argv);
     if (input_file_name == "") {
-        cerr << "[ERROR] Arquivo de entrada nao especificado." << endl;
-        return 1;
+        input_file_name = DEFAULT_INPUT_FILE;
+        cerr << "[INFO] Arquivo de entrada nao especificado. Utilizando o arquivo "
+             << input_file_name << endl;
     }
     string input_path = "../../Input/Backpack/" + input_file_name;
     ifstream input_file(input_path);
@@ -63,8 +65,9 @@ int main(int argc, char** argv) {
         cout << endl << "[INFO] Opcao \'Teste Fatorial\' selecionada!" << endl << endl;
         factorialTest(greedy_solution, greedy_fo, backpack, gen, timer);
     } else {
-        cerr << "[ERROR] ID de solucao invalido!" << endl;
-        // TODO: espeicificar o comando correto de execução
+        cout << "[ERROR] ID de solucao invalido! As solucoes disponiveis sao: [1] Solucao Simples "
+                "e [2] Teste Fatorial."
+             << endl;
         return 1;
     }
     delete backpack;
@@ -85,6 +88,8 @@ void factorialTest(const vector<bool>& curr_solution, const int curr_fo, Backpac
     string csv_path = "Tables/sa_backpack.csv";
     CsvBuilder* csv_builder = new CsvBuilder(csv_path, csv_labels);
 
+    int i = 0;
+
     // Temperatura inicial
     for (const auto& temperature : temperatures) {
         // Fator de esfriamento
@@ -94,6 +99,8 @@ void factorialTest(const vector<bool>& curr_solution, const int curr_fo, Backpac
             // Simulated Annealing
             auto [best_fo, best_solution] =
                 simulatedAnnealingBackpack(curr_solution, temperature, alpha, sa, backpack, gen);
+
+            cout << "[INFO] Configuracao " << ++i << " concluida!" << endl;
 
             const auto sa_end = chrono::steady_clock::now();
             const chrono::duration<double, milli> sa_duration = sa_end - sa_start;
