@@ -11,6 +11,7 @@ class Timer {
    public:
     void stop();
     void elapsed();
+    chrono::duration<double, milli> now();
 
     Timer(string _name);
     ~Timer();
