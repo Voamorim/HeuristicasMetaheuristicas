@@ -1,10 +1,7 @@
 #include "bt_tsp.hpp"
 
-#include "tsp.hpp"
-
-pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph* graph,
-                                     Timer& timer, const int ttl_tabu_list,
-                                     const int max_iterations,
+pair<int, vector<int>> tabuSearchTSP(vector<int> solution, long long fo, Graph* graph,
+                                     const int ttl_tabu_list, const int max_iterations,
                                      const int max_iterations_without_improvement) {
     const int n = graph->getNumVertices() - 1;
 
@@ -21,7 +18,6 @@ pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph*
     while (iterations++ < max_iterations) {
         // Aplica critério de parada por estagnação
         if (iterations_without_improvement >= max_iterations_without_improvement) {
-            cout << "Criterio de parada por estagnacao acionado!" << endl << endl;
             break;
         }
 
@@ -32,17 +28,18 @@ pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph*
         //
         // Verifica se todos os elementos estao na lista tabu
         int min_tabu_list = INT_MAX;
-        for (int i = 1; i <= n; ++i) {
-            for (int j = 1; j < i; ++j) {
-                min_tabu_list = min(min_tabu_list, tabu_list[i][j]);
+        for (int v = 1; v <= n; ++v) {
+            for (int u = 1; u < v; ++u) {
+                min_tabu_list = min(min_tabu_list, tabu_list[v][u]);
             }
         }
 
         if (min_tabu_list != 0) {
             // Caso todos estejam na lista tabu, realizamos a troca do mais antigo
-            for (int i = 1; i <= n; ++i) {
-                for (int j = 1; j < i; ++j) {
-                    if (tabu_list[i][j] != min_tabu_list) continue;
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < i; ++j) {
+                    int v = solution[i], u = solution[j];
+                    if (tabu_list[max(v, u)][min(v, u)] != min_tabu_list) continue;
 
                     swap_pos = make_pair(i, j);
                     swap(solution[i], solution[j]);
@@ -51,13 +48,15 @@ pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph*
                 }
             }
         } else {
-            for (int i = 1; i <= n; ++i) {
-                for (int j = 1; j < i; ++j) {
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < i; ++j) {
                     swap(solution[i], solution[j]);  // troca
 
                     fo = objectiveFunctionTSP(solution, graph, false);
-                    if ((!tabu_list[i][j] and fo < best_neighbor_fo) or
-                        (fo < best_fo and fo > best_neighbor_fo)) {
+
+                    int v = solution[i], u = solution[j];
+                    if ((!tabu_list[max(v, u)][min(v, u)] and fo < best_neighbor_fo) or
+                        (fo < best_fo and fo < best_neighbor_fo)) {
                         best_neighbor_fo = fo;
                         swap_pos = make_pair(i, j);
                     }
@@ -68,17 +67,24 @@ pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph*
         }
 
         // Decrementa a lista tabu
-        for (int i = 1; i <= n; ++i) {
-            for (int j = 1; j < i; ++j) {
-                if (not tabu_list[i][j]) continue;
-                tabu_list[i][j] -= 1;
+        for (int v = 1; v <= n; ++v) {
+            for (int u = 1; u < v; ++u) {
+                if (not tabu_list[v][u]) continue;
+                tabu_list[v][u] -= 1;
             }
+        }
+
+        if (best_neighbor_fo == INT_MAX) {
+            iterations_without_improvement += 1;
+            continue;
         }
 
         // Adiciona a troca na lista tabu
         int i = swap_pos.first;
         int j = swap_pos.second;
-        tabu_list[i][j] = ttl_tabu_list;
+        int v = solution[i];
+        int u = solution[j];
+        tabu_list[max(v, u)][min(v, u)] = ttl_tabu_list;
 
         // Atualiza a solucao atual
         swap(solution[i], solution[j]);
@@ -89,10 +95,6 @@ pair<int, vector<int>> tabuSearchTSP(vector<int>& solution, long long fo, Graph*
             best_fo = fo;
             copy(solution.begin(), solution.end(), best_solution.begin());
             iterations_without_improvement = 0;
-
-            cout << "Solucao melhor encontrada: " << best_fo << endl;
-            timer.elapsed();
-            cout << endl;
         } else {
             iterations_without_improvement += 1;
         }

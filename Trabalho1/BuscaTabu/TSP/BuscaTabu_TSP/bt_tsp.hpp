@@ -15,9 +15,8 @@
 
 using namespace std;
 
-pair<int, vector<int>> tabuSearchTSP(vector<int>& curr_solution, long long fo, Graph* graph,
-                                     Timer& timer, const int ttl_tabu_list,
-                                     const int max_iterations,
+pair<int, vector<int>> tabuSearchTSP(vector<int> curr_solution, long long fo, Graph* graph,
+                                     const int ttl_tabu_list, const int max_iterations,
                                      const int max_iterations_without_improvement);
 
 #endif
