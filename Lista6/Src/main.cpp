@@ -9,6 +9,8 @@
 #include "timer.hpp"
 #include "tsp.hpp"
 
+using namespace std;
+
 #define DEFAULT_INPUT_FILE "bier127.tsp"
 
 int main(int argc, char** argv) {
