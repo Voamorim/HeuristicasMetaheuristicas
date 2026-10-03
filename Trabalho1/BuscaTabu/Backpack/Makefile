@@ -13,7 +13,7 @@ MODULES_PATH			= $(ROOT_DIR)/Modules
 BACKPACK_MODULES_PATH	= $(MODULES_PATH)/Backpack
 
 TIMER_PATH 				= $(MODULES_PATH)/Timer
-IO_PATH 				= $(MODULES_PATH)/Io
+IO_PATH 				= $(MODULES_PATH)/IO
 BUILDCSV_PATH 			= $(MODULES_PATH)/BuildCSV
 BACKPACK_PATH 			= $(BACKPACK_MODULES_PATH)/Backpack
 BT_PATH 				= BuscaTabu_Backpack
@@ -62,7 +62,7 @@ $(BINARYDIR)/io_%.o: $(IO_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 # BuildCSV files
-$(BINARYDIR)/buildcsv_%.o: $(TIMER_PATH)/%.cpp | $(BINARYDIR)
+$(BINARYDIR)/buildcsv_%.o: $(BUILDCSV_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 # Backpack files

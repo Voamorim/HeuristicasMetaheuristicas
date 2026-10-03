@@ -1,19 +1,15 @@
 #include "bt_backpack.hpp"
 
-pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long long fo,
-                                                 Backpack* backpack, Timer& timer) {
+pair<long long, vector<bool>> tabuSearchBackpack(vector<bool> solution, long long fo,
+                                                 const int max_iterations,
+                                                 const int max_iterations_without_improvement,
+                                                 const int ttl_tabu_list, Backpack* backpack,
+                                                 Timer& timer) {
     const int n = backpack->items.size();
 
     vector<bool> best_solution(n);
     copy(solution.begin(), solution.end(), best_solution.begin());
     long long best_fo = fo;
-
-    // Define criterios de parada
-    const int max_iterations = 1000 * n;
-    const int max_iterations_without_improvement = sqrt(max_iterations);
-
-    // Define o tempo de vida de um elemento na lista tabu
-    const int ttl_tabu_list = 3;
 
     // Inicializa a lista tabu com prazo
     vector<int> tabu_list(n, 0);
@@ -24,7 +20,6 @@ pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long lo
     while (iterations++ < max_iterations) {
         // Aplica criterio de parada por estagnacao
         if (iterations_without_improvement >= max_iterations_without_improvement) {
-            cout << "Criterio de parada por estagnacao acionado!" << endl << endl;
             break;
         }
 
@@ -43,14 +38,14 @@ pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long lo
 
                 flip_pos = i;
                 solution[i] = solution[i] ^ 1;
-                best_neighbor_fo = objectiveFunctionBackpack(solution, backpack);
+                tie(best_neighbor_fo, ignore) = objectiveFunctionBackpack(solution, backpack);
                 solution[i] = solution[i] ^ 1;
             }
         } else {
             for (int i = 0; i < n; ++i) {
                 solution[i] = solution[i] ^ 1;  // flip
 
-                fo = objectiveFunctionBackpack(solution, backpack);
+                tie(fo, ignore) = objectiveFunctionBackpack(solution, backpack);
                 if ((!tabu_list[i] and fo > best_neighbor_fo) or
                     (fo > best_fo and fo > best_neighbor_fo)) {
                     best_neighbor_fo = fo;
@@ -72,17 +67,13 @@ pair<long long, vector<bool>> tabuSearchBackpack(vector<bool>& solution, long lo
 
         // Atualiza a solucao atual
         solution[flip_pos] = solution[flip_pos] ^ 1;
-        fo = objectiveFunctionBackpack(solution, backpack);
+        tie(fo, ignore) = objectiveFunctionBackpack(solution, backpack);
 
         // Atualiza a melhor solucao encontrada
         if (fo > best_fo) {
             best_fo = fo;
             copy(solution.begin(), solution.end(), best_solution.begin());
             iterations_without_improvement = 0;
-
-            cout << "Solucao melhor encontrada: " << best_fo << endl;
-            timer.elapsed();
-            cout << endl;
         } else {
             iterations_without_improvement++;
         }
