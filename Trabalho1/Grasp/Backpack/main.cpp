@@ -5,6 +5,7 @@
 
 #include "backpack.hpp"
 #include "build_csv.hpp"
+#include "grasp_backpack.hpp"
 #include "io.hpp"
 #include "timer.hpp"
 
@@ -73,11 +74,11 @@ void factorialTest(Backpack* backpack, Timer& timer, mt19937& gen) {
     const int n = backpack->items.size();
 
     // Define criterios de parada
-    const vector<int> grasp_maxes = {n * 10, n * 100, n * 1000};
-    const vector<int> max_iterations_local_search = {(int)(0.5 * n), n, 2 * n};
+    const vector<int> grasp_maxes = {(int)(0.5 * n), n, n * 10};
+    const vector<int> max_iterations_local_search = {5, 10};
 
     // Define alphas
-    const vector<double> alphas = {0.01, 0.05, 0.1, 0.2};
+    const vector<double> alphas = {0.1, 0.5, 0.9};
 
     // Inicializa csv
     const vector<string> csv_labels = {"GraspMAX", "Iterações Busca Local", "Alpha", "FO",
@@ -124,17 +125,11 @@ void solve(Backpack* backpack, Timer& timer, mt19937& gen) {
     const int n = backpack->items.size();
 
     // Define criterios de parada
-    const int grasp_max = n * 100;
-    const int max_iterations_local_search = n;
+    const int grasp_max = n;
+    const int max_iterations_local_search = 5;
 
     // Define alphas
-    const double alpha = 0.01;
-
-    // Inicializa csv
-    const vector<string> csv_labels = {"GraspMAX", "Iterações Busca Local", "Alpha", "FO",
-                                       "Duração (ms)"};
-    string csv_path = "Tables/grasp_backpack.csv";
-    CsvBuilder* csv_builder = new CsvBuilder(csv_path, csv_labels);
+    const double alpha = 0.1;
 
     // Grasp
     auto [best_fo, best_solution] =

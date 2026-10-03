@@ -84,23 +84,16 @@ vector<int> localSearchPhase(Graph* graph, vector<int> solution, const int max_i
                              mt19937& gen) {
     const int n = graph->getNumVertices() - 1;
 
-    // Vetor com a ordem de acesso das posicoes do vetor solucao
-    vector<int> access_order(n);
-    iota(access_order.begin(), access_order.end(), 0);
-
     for (int it = 0; it < max_iterations; ++it) {
         bool improvement = false;
         vector<int> best_improvement(n);
         int best_neighbor_fo = objectiveFunctionTSP(solution, graph, true);
 
-        // Ordem de acesso aleatoria a cada iteracao
-        shuffle(access_order.begin(), access_order.end(), gen);
-
-        for (auto& v : access_order) {
+        for (int v = 0; v < n - 1; ++v) {
             // Obtem outra posicao aleatoria para fazer a troca
             int u;
             do {
-                u = getRandomInteger(0, n - 1, gen);
+                u = getRandomInteger(v + 1, n - 1, gen);
             } while (u == v);
 
             // Troca
@@ -119,7 +112,7 @@ vector<int> localSearchPhase(Graph* graph, vector<int> solution, const int max_i
 
         if (not improvement) break;
 
-        solution = move(best_improvement);
+        solution = best_improvement;
     }
     return solution;
 }
