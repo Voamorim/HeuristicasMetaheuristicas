@@ -105,7 +105,7 @@ void factorialTest(const vector<bool>& curr_solution, const int curr_fo, Backpac
                 // Busca Tabu
                 auto [best_fo, best_solution] =
                     tabuSearchBackpack(curr_solution, curr_fo, max_iteration,
-                                       iterations_without_improvement, ttl, backpack, timer);
+                                       iterations_without_improvement, ttl, backpack);
 
                 cout << "[INFO] Configuracao " << ++i << " concluida!" << endl;
 
@@ -141,7 +141,7 @@ void solve(const vector<bool>& curr_solution, const int curr_fo, Backpack* backp
     // Busca Tabu
     auto [best_fo, best_solution] =
         tabuSearchBackpack(curr_solution, curr_fo, max_iterations,
-                           max_iterations_without_improvement, ttl_tabu_list, backpack, timer);
+                           max_iterations_without_improvement, ttl_tabu_list, backpack);
 
     // Imprime a solucao encontrada e o tempo gasto
     timer.stop();
