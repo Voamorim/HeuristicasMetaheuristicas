@@ -28,10 +28,17 @@ int objectiveFunctionTSP(const vector<int>& solution, Graph* graph, const bool p
     return fo;
 }
 
-vector<int> getRandomSolutionTSP(const int n, mt19937& gen) {
+vector<int> getRandomSolutionTSP(Graph* graph, const int n, mt19937& gen, const bool print_solution) {
     vector<int> solution(n);
     iota(solution.begin(), solution.end(), 1);
     shuffle(solution.begin(), solution.end(), gen);
+    
+    if (print_solution) {
+        string title = "Solução Aleatória para o TSP";
+        int fo = objectiveFunctionTSP(solution, graph, false);
+        printSolutionTSP(solution, fo, title);
+    }
+
     return solution;
 }
 
