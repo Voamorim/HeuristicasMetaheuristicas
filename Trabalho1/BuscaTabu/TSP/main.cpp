@@ -84,7 +84,7 @@ void factorialTest(const vector<int>& curr_solution, const int curr_fo, Graph* g
     const vector<int> max_iterations = {n, 10 * n, 100 * n, 1000 * n};
 
     // Tempo de vida de um elemento na lista tabu
-    const vector<int> tabu_list_ttls = {1, 3, 5, 10};
+    const vector<int> tabu_list_ttls = {1, 5, 10, 20, 40};
 
     // Inicializa csv
     const vector<string> csv_labels = {"Iterações", "Iterações sem Melhora", "TTL", "FO",
@@ -98,32 +98,24 @@ void factorialTest(const vector<int>& curr_solution, const int curr_fo, Graph* g
     for (const auto& max_iteration : max_iterations) {
         // Duracoes tabu
         for (const auto& ttl : tabu_list_ttls) {
-            // Maximo de iteracoes sem melhora (usar/nao usar)
-            for (int use = 0; use <= 1; ++use) {
-                int iterations_without_improvement;
-                if (use) {
-                    iterations_without_improvement = sqrt(max_iteration);
-                } else {
-                    iterations_without_improvement = max_iteration;
-                }
+            double iterations_without_improvement = sqrt(max_iteration);
 
-                const auto bt_start = chrono::steady_clock::now();
+            const auto bt_start = chrono::steady_clock::now();
 
-                // Busca Tabu
-                auto [best_fo, best_solution] =
-                    tabuSearchTSP(curr_solution, curr_fo, graph, ttl, max_iteration,
-                                  iterations_without_improvement);
+            // Busca Tabu
+            auto [best_fo, best_solution] =
+                tabuSearchTSP(curr_solution, curr_fo, graph, ttl, max_iteration,
+                                iterations_without_improvement);
 
-                cout << "[INFO] Configuracao " << ++i << " concluida!" << endl;
+            cout << "[INFO] Configuracao " << ++i << " concluida!" << endl;
 
-                const auto bt_end = chrono::steady_clock::now();
-                const chrono::duration<double, milli> bt_duration = bt_end - bt_start;
+            const auto bt_end = chrono::steady_clock::now();
+            const chrono::duration<double, milli> bt_duration = bt_end - bt_start;
 
-                vector<double> csv_values = {(double)max_iteration,
-                                             (double)iterations_without_improvement, (double)ttl,
-                                             (double)best_fo, (double)bt_duration.count()};
-                csv_builder->addLine(csv_values);
-            }
+            vector<double> csv_values = {(double)max_iteration,
+                                         (double)iterations_without_improvement, (double)ttl,
+                                         (double)best_fo, (double)bt_duration.count()};
+            csv_builder->addLine(csv_values);
         }
     }
 
