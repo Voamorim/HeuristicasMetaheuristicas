@@ -26,8 +26,8 @@ void CsvBuilder::addLine(const vector<double>& values) {
 		long long int_part = value;
 		double frac_part = value - int_part;
 
-		if (frac_part >= 0.01) {
-			csv_file << fixed << setprecision(2) << value;
+		if (frac_part >= 0.001) {
+			csv_file << fixed << setprecision(3) << value;
 		} else {
 			csv_file << int_part;
 		}
