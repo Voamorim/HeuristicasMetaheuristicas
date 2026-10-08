@@ -40,7 +40,7 @@ pair<int, vector<int>> simulatedAnnealingTSP(vector<int> curr_solution, float te
 			} else {
 				double r = getRandomFloat(gen);
 				double delta = new_fo - curr_fo;
-				double p = exp(delta / temperature);
+				double p = exp(-delta / temperature);
 
 				if (r < p) {
 					curr_fo = new_fo;

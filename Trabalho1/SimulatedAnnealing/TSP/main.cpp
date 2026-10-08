@@ -77,8 +77,8 @@ int main(int argc, char** argv) {
 void factorialTest(const vector<int>& curr_solution, const int curr_fo, Graph* graph, mt19937& gen,
                    Timer& timer) {
     // Valores a serem testados
-    const vector<double> temperatures = {1000.0, 10000.0, 100000.0, 1000000.0};
-    const vector<double> alphas = {0.9, 0.95, 0.99};
+    const vector<double> temperatures = {1000.0, 10000.0, 100000.0, 1000000.0, 10000000.0, 1000000000.0};
+    const vector<double> alphas = {0.9, 0.95, 0.99, 0.999};
 
     // Iterações por temperatura
     const int sa = graph->getNumVertices() - 1;
