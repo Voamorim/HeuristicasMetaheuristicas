@@ -38,8 +38,8 @@ pair<int, vector<bool>> simulatedAnnealingBackpack(vector<bool> curr_solution, d
                 }
             } else {
                 double r = getRandomFloat(gen);
-                double delta = new_fo - curr_fo;
-                double p = exp(delta / temperature);
+                double delta = curr_fo - new_fo;
+                double p = exp(-delta / temperature);
 
                 if (r < p) {
                     curr_fo = new_fo;

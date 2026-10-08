@@ -78,7 +78,7 @@ void factorialTest(const vector<bool>& curr_solution, const int curr_fo, Backpac
                    mt19937& gen, Timer& timer) {
     // Valores a serem testados
     const vector<double> temperatures = {1000.0, 10000.0, 100000.0, 1000000.0};
-    const vector<double> alphas = {0.9, 0.95, 0.99};
+    const vector<double> alphas = {0.9, 0.95, 0.99, 0.999};
 
     // Iterações por temperatura
     const int sa = backpack->items.size();

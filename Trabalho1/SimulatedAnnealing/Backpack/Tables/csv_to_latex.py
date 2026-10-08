@@ -10,7 +10,7 @@ for table in tables:
 
     latex_table = df.to_latex(
         index=False,
-        float_format='%.2f',
+        float_format='%.3f',
         caption='TODO', 
         label='tab:TODO',
     )
