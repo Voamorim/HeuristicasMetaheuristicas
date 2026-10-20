@@ -13,7 +13,7 @@ using namespace std;
 
 #define DEFAULT_INPUT_FILE "bier127.tsp"
 
-Graph* readInput();
+Graph* readInput(int argc, char** argv);
 
 int main(int argc, char** argv) {
     random_device rd;
@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     string label = "ILS para o Problema do Caixeiro Viajante (TSP)";
     Timer timer(label);
 
-    Graph* graph = readInput();
+    Graph* graph = readInput(argc, argv);
     if(graph == NULL){
         return 1;
     }
@@ -32,25 +32,27 @@ int main(int argc, char** argv) {
     // Solucao inicial gulosa
     vector<int> greedy_solution = getGreedySolutionTSP(graph, n, gen, true);
     int greedy_fo = objectiveFunctionTSP(greedy_solution, graph, false);
+    cout << endl;
 
     // -=-=-=-=-=--= ILS =-=-=-=-=-=-=-
-    const int max_iterations = n * 100;
-    const int max_iterations_wihtout_improvement = sqrt(max_iterations);
+    const int max_iterations = n * 1000;
+    const int max_iterations_wihtout_improvement = max_iterations / 100;
     const int max_iterations_local_search = n;
 
     int best_fo;
     vector<int> best_solution;
-    tie(best_fo, best_solution) = ils(graph, greedy_solution, max_iterations, max_iterations_wihtout_improvement, max_iterations_local_search);
+    tie(best_fo, best_solution) = ilsTSP(graph, greedy_solution, max_iterations, max_iterations_wihtout_improvement, max_iterations_local_search, gen, timer);
 
     string title = "ILS para o Problema do Caixeiro Viajante (TSP)";
     printSolutionTSP(best_solution, best_fo, title);
     cout << endl;
     timer.stop();
 
+    delete graph;
     return 0;
 }
 
-Graph* readInput(){
+Graph* readInput(int argc, char** argv){
     // Coleta o arquivo de entrada
     Io* io = new Io();
     string input_file_name = io->getInputFileName(argc, argv);
