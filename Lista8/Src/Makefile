@@ -16,7 +16,7 @@ UTILS_PATH 			= $(MODULES_PATH)/Utils
 IO_PATH 			= $(MODULES_PATH)/IO
 GRAPH_PATH			= $(MODULES_PATH)/Graph
 TSP_PATH 			= $(MODULES_PATH)/TSP
-ILS_PATH			= $(MODULES_PATH)/ILS
+VNS_PATH			= $(MODULES_PATH)/VNS
 
 SRCS 				= $(filter-out $(MAIN_FILE).cpp ./$(MAIN_FILE).cpp, $(wildcard *.cpp))
 SRCS_TIMER 			= $(wildcard $(TIMER_PATH)/*.cpp)
@@ -24,7 +24,7 @@ SRCS_UTILS			= $(wildcard $(UTILS_PATH)/*.cpp)
 SRCS_IO				= $(wildcard $(IO_PATH)/*.cpp)
 SRCS_GRAPH			= $(wildcard $(GRAPH_PATH)/*.cpp)
 SRCS_TSP			= $(wildcard $(TSP_PATH)/*.cpp)
-SRCS_ILS			= $(wildcard $(ILS_PATH)/*.cpp)
+SRCS_VNS			= $(wildcard $(VNS_PATH)/*.cpp)
 
 OBJS_MAIN 			= $(BINARYDIR)/$(MAIN_FILE).o
 OBJS_LOCAL 			= $(patsubst %.cpp, $(BINARYDIR)/%.o, $(notdir $(SRCS)))
@@ -33,11 +33,11 @@ OBJS_UTILS			= $(patsubst %.cpp, $(BINARYDIR)/utils_%.o, $(notdir $(SRCS_UTILS))
 OBJS_IO				= $(patsubst %.cpp, $(BINARYDIR)/io_%.o, $(notdir $(SRCS_IO)))
 OBJS_GRAPH			= $(patsubst %.cpp, $(BINARYDIR)/graph_%.o, $(notdir $(SRCS_GRAPH)))
 OBJS_TSP			= $(patsubst %.cpp, $(BINARYDIR)/tsp_%.o, $(notdir $(SRCS_TSP)))
-OBJS_ILS			= $(patsubst %.cpp, $(BINARYDIR)/ils_%.o, $(notdir $(SRCS_ILS)))
+OBJS_VNS			= $(patsubst %.cpp, $(BINARYDIR)/vns_%.o, $(notdir $(SRCS_VNS)))
 
-OBJS 				= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_UTILS) $(OBJS_IO) $(OBJS_GRAPH) $(OBJS_TSP) $(OBJS_ILS) $(OBJS_MAIN)
+OBJS 				= $(OBJS_LOCAL) $(OBJS_TIMER) $(OBJS_UTILS) $(OBJS_IO) $(OBJS_GRAPH) $(OBJS_TSP) $(OBJS_VNS) $(OBJS_MAIN)
 
-INCLUDES 			= -I. -I$(TIMER_PATH) -I$(UTILS_PATH) -I$(IO_PATH) -I$(GRAPH_PATH) -I$(TSP_PATH) -I$(ILS_PATH)
+INCLUDES 			= -I. -I$(TIMER_PATH) -I$(UTILS_PATH) -I$(IO_PATH) -I$(GRAPH_PATH) -I$(TSP_PATH) -I$(VNS_PATH)
 
 .PHONY: all clean run
 
@@ -75,8 +75,8 @@ $(BINARYDIR)/graph_%.o: $(GRAPH_PATH)/%.cpp | $(BINARYDIR)
 $(BINARYDIR)/tsp_%.o: $(TSP_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
-# ILS files
-$(BINARYDIR)/ils_%.o: $(ILS_PATH)/%.cpp | $(BINARYDIR)
+# VNS files
+$(BINARYDIR)/vns_%.o: $(VNS_PATH)/%.cpp | $(BINARYDIR)
 	$(COMPILER) $(INCLUDES) $(FLAGS) -c $< -o $@
 
 $(BINARYDIR):

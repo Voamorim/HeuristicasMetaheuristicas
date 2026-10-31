@@ -4,7 +4,7 @@
 #include <string>
 
 #include "graph.hpp"
-#include "ils_tsp.hpp"
+#include "vns_tsp.hpp"
 #include "io.hpp"
 #include "timer.hpp"
 #include "tsp.hpp"
@@ -34,14 +34,14 @@ int main(int argc, char** argv) {
     int greedy_fo = objectiveFunctionTSP(greedy_solution, graph, false);
     cout << endl;
 
-    // -=-=-=-=-=--= ILS =-=-=-=-=-=-=-
-    const int max_iterations = n * 1000;
-    const int max_iterations_wihtout_improvement = max_iterations / 100;
+    // -=-=-=-=-=--= VNS =-=-=-=-=-=-=-
+    const int VNSMax = n * 5;
+    const int VMax = n;
     const int max_iterations_local_search = n;
 
     int best_fo;
     vector<int> best_solution;
-    tie(best_fo, best_solution) = ilsTSP(graph, greedy_solution, max_iterations, max_iterations_wihtout_improvement, max_iterations_local_search, gen, timer);
+    tie(best_fo, best_solution) = vnsTSP(graph, greedy_solution, VNSMax, VMax, max_iterations_local_search, gen, timer);
 
     string title = "VNS para o Problema do Caixeiro Viajante (TSP)";
     printSolutionTSP(best_solution, best_fo, title);
