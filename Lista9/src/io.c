@@ -10,7 +10,7 @@ FILE* getUtilityFile(const int argc, char **argv){
     for(int i = 1; i < argc; i+=2){
         if(!strcmp(argv[i], "-u")){
             strcpy(utility_file_name, argv[i+1]);
-            strcat("../input/", utility_file_name);
+            strcat("../inputs/", utility_file_name);
             break;
         }
     }
@@ -22,7 +22,7 @@ FILE* getWeightsFile(const int argc, char **argv){
     for(int i = 1; i < argc; i+=2){
         if(!strcmp(argv[i], "-w")){
             strcpy(weights_file_name, argv[i+1]);
-            strcat("../input/", weights_file_name);
+            strcat("../inputs/", weights_file_name);
             break;
         }
     }
@@ -34,7 +34,7 @@ FILE* getBackpackFile(const int argc, char **argv){
     for(int i = 1; i < argc; i+=2){
         if(!strcmp(argv[i], "-b")){
             strcpy(backpack_file_name, argv[i+1]);
-            strcat("../input/", backpack_file_name);
+            strcat("../inputs/", backpack_file_name);
             break;
         }
     }

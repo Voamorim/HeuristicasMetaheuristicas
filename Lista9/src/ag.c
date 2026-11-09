@@ -10,7 +10,7 @@ AG* buildAG(const int npop, const int ngen, const double pcrossover,
     ag->ngen = ngen;
     ag->pcrossover = pcrossover;
     ag->pmutation = pmutation;
-    ag->nelite = isEven(nelite) ? nelite : nelite + 1;
+    ag->nelite = nelite > npop ? npop : nelite;
     ag->nitems = nitems;
 
     // Informações para incrementar a taxa de mutação quando houver estagnação
@@ -118,11 +118,6 @@ void evaluateFitness(AG *ag){
             double utility_sum = getBackpackUtility(ag->backpacks[b],
                                                     ag->items);
 
-            double pweights_sum = 0.0;
-            for(int i = 0; i < ag->nitems; ++i){
-                pweights_sum += ag->items[i]->weight ;
-            }
-
             ag->fitness[b] = utility_sum - (utility_sum * (items_weight - ag->backpacks[b]->volume));
         }
     }
@@ -190,8 +185,10 @@ void crossover(AG *ag, const int *parents){
 
         // Se o cruzamento não deva ocorrer, apenas copia os genes dos pais
         if(r > ag->pcrossover){
-            copyBackpack(ag->intermediate_backpacks[i], ag->backpacks[i]);
-            copyBackpack(ag->intermediate_backpacks[i+1], ag->backpacks[i+1]);
+            copyBackpack(ag->intermediate_backpacks[i],
+                         ag->backpacks[parent_1]);
+            copyBackpack(ag->intermediate_backpacks[i+1],
+                         ag->backpacks[parent_2]);
             continue;
         }
 
@@ -265,7 +262,9 @@ void elitism(AG *ag){
     for(int i = 0; i < ag->nelite; ++i){
         No backpack = extrairMaxHeap(heap);
 
-        copyBackpack(ag->intermediate_backpacks[i], ag->backpacks[backpack.id]);
+        if(backpack.id >= 0)
+            copyBackpack(ag->intermediate_backpacks[i],
+                         ag->backpacks[backpack.id]);
     }
 
     destroiMaxHeap(heap);

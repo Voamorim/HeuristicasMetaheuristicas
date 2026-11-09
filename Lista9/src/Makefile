@@ -26,4 +26,4 @@ run:
 	./$(EXENAME)
 
 clean:
-	rm -rf $(BINARYDIR)/* $(EXENAME)
+	rm -rf $(BINARYDIR) $(EXENAME)

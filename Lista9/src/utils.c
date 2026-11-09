@@ -10,9 +10,10 @@ int comparePairDoubleInt(const void *a, const void *b){
 
     if(pa->f > pb->f){
         return 1;
-    } else {
+    } else if(pa->f < pb->f){
         return -1;
     }
+    return 0;
 }
 
 void sortVetPairDoubleInt(PairDoubleInt *v, const int n){

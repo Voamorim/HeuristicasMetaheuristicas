@@ -39,6 +39,7 @@ void solve(FILE* items_weights_fptr, FILE* items_utility_fptr,
         free(vparents); // Libera o vetor de pais da geração atual da memória
     }
 
+    evaluateFitness(ag);
     printResults(ag); // Imprime os resultados finais do algoritmo genético
     freeAG(ag); // Libera a estrutura do algoritmo genético da memória
 
@@ -73,6 +74,7 @@ void solveFactorialTest(const int npop, const int ngen, const double pcrossover,
         copyPopulation(ag);
     }
 
+    evaluateFitness(ag);
     printFinalResultsCSV(ag, results);
     freeAG(ag);
 }
@@ -143,6 +145,7 @@ void solveGenerationsTest(const int npop, const int ngen, const double pcrossove
 
         copyPopulation(ag);
 
+        evaluateFitness(ag);
         printGenResultsCSV(ag, generation_results, generation + 1);
     }
 

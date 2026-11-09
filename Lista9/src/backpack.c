@@ -55,7 +55,7 @@ double getBackpackUtility(const Backpack *backpack, Item **items){
 void copyBackpack(Backpack *dest, Backpack* src){
     if(dest->items)
         free(dest->items);
-    dest->items = (int*) malloc (sizeof(int) * src->nitems);
+    dest->items = (int*) malloc (sizeof(int) * (src->nitems + 1));
     memcpy(dest->items, src->items, src->nitems * sizeof(int));
     dest->nitems = src->nitems;
     dest->volume = src->volume;
