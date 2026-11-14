@@ -1,11 +1,3 @@
-/**
- * Atividade 3 - Mochila Binária
- *
- * Aluno: Vítor Oliveira Amorim
- * Professora: Carolina Ribeiro Xavier
- * Disciplina: Algoritmos Bioinspirados
-*/
-
 #include "ag.h"
 #include "io.h"
 #include "solve.h"

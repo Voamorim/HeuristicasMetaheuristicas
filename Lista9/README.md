@@ -44,7 +44,7 @@ Estes arquivos podem ser substituidos. Para isso, o nome dos novos arquivos deve
 - `-w`: arquivo com o peso dos itens;
 - `-c`: arquivo com a capacidade da mochila.
 
-Para um exemplo de uso destas flags, vá para a seção [Exemplo de Execução](#exemplo-de-execucao)
+Para um exemplo de uso destas flags, vá para a seção [Exemplo de Execução](#exemplo-de-execução)
 
 ### Saída
 

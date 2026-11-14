@@ -23,4 +23,7 @@ $(BINARYDIR):
 	test ! -d $(BINARYDIR) && mkdir $(BINARYDIR)
 
 clean:
-	rm -rf $(BINARYDIR)/* $(EXENAME)
+	rm -rf $(BINARYDIR)/ $(EXENAME)
+
+run:
+	./aco
